@@ -1,13 +1,9 @@
-const Pool = require('pg').Pool
-require('dotenv').config()
+const { Pool } = require('pg');
 
 const pool = new Pool({
-  user: process.env.USERNAME,
-  password: process.env.PASSWORD,
-  host: process.env.HOST,
-  port: process.env.DBPORT,
-  database: "todoapp"
-})
-
-module.exports = pool
-
+  user: 'todoapp_6d2w_user',
+  password: 'your_password',
+  host: 'dpg-cmo6ha5a73kc73b4etjg-a.ohio-postgres.render.com', // Correct hostname
+  database: 'todoapp_6d2w',
+  port: 5432, // or your specific port
+});
