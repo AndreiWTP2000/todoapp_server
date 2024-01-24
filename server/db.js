@@ -7,3 +7,4 @@ const pool = new Pool({
   database: 'todoapp_6d2w',
   port: 5432, // or your specific port
 });
+module.exports = pool;
