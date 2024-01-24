@@ -64,35 +64,33 @@ app.put('/todos/:id', async (req, res) => {
 //sign up
 app.post('/signup', async (req, res) => {
   try {
-      const { email, password } = req.body
+    const { email, password } = req.body;
 
-    console.log('PASSWORD',password)
-    
-    const salt = bcrypt.genSaltSync(10)
-    const hashedPassword = bcrypt.hashSync(password, salt)
+    console.log('PASSWORD', password);
 
-      const signUp = await pool.query(
-        `INSERT INTO users (email, hashed_password) VALUES($1, $2)`,
-        [email, hashedPassword]
-      )
-    
-      const token = jwt.sign({ email }, 'secret', { expiresIn: '1h' })
-    
-    res.json({ email, token })
-    const error = signUp.name === 'error'
-    
-    if (!error) {
-      res.json({ email, token })
-  } else {
-      res.json({ detail: signUp.detail})
-  }
-  
+    const salt = bcrypt.genSaltSync(10);
+    const hashedPassword = bcrypt.hashSync(password, salt);
 
+    const signUp = await pool.query(
+      `INSERT INTO users (email, hashed_password) VALUES($1, $2)`,
+      [email, hashedPassword]
+    );
+
+    const token = jwt.sign({ email }, 'secret', { expiresIn: '1h' });
+
+    if (signUp.rowCount > 0) {
+      // Successfully signed up
+      res.json({ email, token });
+    } else {
+      // Some error occurred during signup
+      res.status(500).json({ detail: 'Signup failed' });
+    }
   } catch (error) {
-    res.json(error)
-    console.error(error)
+    console.error(error);
+    // Handle other errors, and send an appropriate response
+    res.status(500).json({ detail: 'Internal server error' });
   }
-})
+});
 
 
 //login
